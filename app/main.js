@@ -77,6 +77,7 @@
 	    this.speechRecognition = null;
 	    this.speechSynthesis = null;
 	    this.listenStatus = "";
+	    this.speakStatus = "";
 	    //--------------------------------
 
 	    //Bind functions.
@@ -85,6 +86,9 @@
 	    this.onListenEnd = this.onListenEnd.bind(this);
 	    this.onListenResults = this.onListenResults.bind(this);
 	    this.onListenError = this.onListenError.bind(this);
+	    this.onSpeakStart = this.onSpeakStart.bind(this);
+	    this.onSpeakEnd = this.onSpeakEnd.bind(this);
+	    this.onSpeakError = this.onSpeakError.bind(this);
 	    this.listenButton_onClick = this.listenButton_onClick.bind(this);
 	    this.speakButton_onClick = this.speakButton_onClick.bind(this);
 	    //--------------------------------
@@ -182,7 +186,7 @@
 	    key: "onListenResults",
 	    value: function onListenResults(e) {
 	      if (e && e.results) {
-	        var text = this.html.mainText.value.replace(/\s+$/g, '') + ' ';
+	        var text = "";
 	        for (var i = 0; i < e.results.length; i++) {
 	          if (e.results[i].isFinal) {
 	            for (var j = 0; j < e.results.length; j++) {
@@ -202,24 +206,66 @@
 	    //----------------------------------------------------------------
 
 	  }, {
+	    key: "onSpeakStart",
+	    value: function onSpeakStart() {
+	      console.log("onSpeakStart");
+	      this.speakStatus = "speaking";
+	      this.html.speakButton.textContent = "Speaking...";
+	      this.html.speakButton.className = "active button";
+	    }
+	  }, {
+	    key: "onSpeakEnd",
+	    value: function onSpeakEnd() {
+	      console.log("onSpeakEnd");
+	      this.speakStatus = "";
+	      this.html.speakButton.textContent = "Speak";
+	      this.html.speakButton.className = "button";
+	    }
+	  }, {
+	    key: "onSpeakError",
+	    value: function onSpeakError(err) {
+	      console.error("onSpeakError: ", err);
+	      this.onSpeakEnd();
+	    }
+
+	    //----------------------------------------------------------------
+
+	    //Click to start listening for input.
+	    //(Or, if already listening, click to stop.)
+	    //Note that SpeechRecognition automatically stops when it detects the "end of
+	    //a sentence" (i.e. a significant pause)
+
+	  }, {
 	    key: "listenButton_onClick",
 	    value: function listenButton_onClick() {
 	      if (!this.speechRecognition) return;
 
-	      if (this.listenStatus === "listening") {
-	        this.speechRecognition.stop();
-	      } else {
+	      if (this.listenStatus !== "listening") {
 	        this.speechRecognition.start();
+	      } else {
+	        this.speechRecognition.stop();
 	      }
 	    }
+
+	    //Click to start reading out the text in the main text area.
+	    //(Or, if already reading out the text, click to stop speaking.)
+
 	  }, {
 	    key: "speakButton_onClick",
 	    value: function speakButton_onClick() {
 	      if (!(this.speechSynthesis && this.SpeechSynthesisUtterance)) return;
 
-	      var spokenWords = new this.SpeechSynthesisUtterance(this.html.mainText.value);
-	      this.speechSynthesis.cancel(); //Stop any previous attempts to .speak().
-	      this.speechSynthesis.speak(spokenWords);
+	      if (this.speakStatus !== "speaking") {
+	        var spokenWords = new this.SpeechSynthesisUtterance(this.html.mainText.value);
+	        spokenWords.onend = this.onSpeakEnd;
+	        spokenWords.onerror = this.onSpeakError;
+
+	        this.speechSynthesis.cancel(); //Stop any previous attempts to .speak().
+	        this.speechSynthesis.speak(spokenWords);
+	        this.onSpeakStart();
+	      } else {
+	        this.speechSynthesis.cancel();
+	      }
 	    }
 	  }]);
 
