@@ -42,9 +42,9 @@ class App {
     //managed to successfully test with.
     try {
       if ("webkitSpeechRecognition" in window) {  //Chrome
-        this.speechRecognition = new webkitSpeechRecognition();
+        this.speechRecognition = new window.webkitSpeechRecognition();
       } else if ("SpeechRecognition" in window) {  //Should be the future "standard"
-        this.speechRecognition = new SpeechRecognition();
+        this.speechRecognition = new window.SpeechRecognition();
       }
     } catch (err) { console.error("SpeechRecognition error: ", err); }
     
@@ -59,10 +59,24 @@ class App {
       this.speechRecognition.onerror = this.onListenError;
 
       this.html.listenButton.onclick = this.listenButton_onClick;
-      this.html.speakButton.onclick = this.speakButton_onClick;
     } else {
       this.html.listenButton.textContent = "(Can't listen)";
       this.html.listenButton.className = "disabled button";
+    }
+    //--------------------------------
+    
+    //Speech Synthesis
+    //--------------------------------
+    try {
+      if ("speechSynthesis" in window) { this.speechSynthesis = window.speechSynthesis }
+      if ("SpeechSynthesisUtterance" in window) { this.SpeechSynthesisUtterance = window.SpeechSynthesisUtterance }
+    } catch (err) { console.error("SpeechSynthesis error: ", err); }
+    
+    if (this.speechSynthesis && this.SpeechSynthesisUtterance) {
+      this.html.speakButton.onclick = this.speakButton_onClick;
+    } else {
+      this.html.speakButton.textContent = "(Can't speak)";
+      this.html.speakButton.className = "disabled button";
     }
     //--------------------------------
   }
@@ -123,6 +137,11 @@ class App {
   }
   
   speakButton_onClick() {
+    if (!(this.speechSynthesis && this.SpeechSynthesisUtterance)) return;
+    
+    const spokenWords = new this.SpeechSynthesisUtterance(this.html.mainText.value);
+    this.speechSynthesis.cancel();  //Stop any previous attempts to .speak().
+    this.speechSynthesis.speak(spokenWords);
   }
 }
 //==============================================================================
