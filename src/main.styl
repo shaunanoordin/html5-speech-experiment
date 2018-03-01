@@ -1,5 +1,7 @@
 dark-colour = #333
+mid-dark-colour = #666
 mid-colour = #999
+mid-light-colour = #ccc
 light-colour = #fff
 primary-colour = #c33
 primary-colour-faded = #600
@@ -75,10 +77,12 @@ table
     
     .button
       background: primary-colour
+      border: 1px solid mid-light-colour
       color: light-colour
       cursor: pointer
-      width: 20em
+      font-size: 1em
       margin: 1em
+      width: 20em
       
       &.disabled
         background: mid-colour
@@ -89,6 +93,11 @@ table
         animation-timing-function: linear
         animation-iteration-count: infinite
         animation-direction: alternate
+        
+  .info-panel
+    font-size: 0.8em
+    padding: 0.5em 2em
+    background: mid-light-colour
 
 @keyframes primary-pulse {
     from { background-color: primary-colour-highlighted }
