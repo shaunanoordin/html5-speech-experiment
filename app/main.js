@@ -75,6 +75,7 @@
 	      speakButton: document.getElementById("speak-button")
 	    };
 	    this.speechRecognition = null;
+	    this.speechSynthesis = null;
 	    this.listenStatus = "";
 	    //--------------------------------
 
@@ -93,7 +94,6 @@
 	    //First check: do we have Speech Recognition on this browser?
 	    //Chrome uses the webkit prefix, and Chrome 64is the only browser that I've
 	    //managed to successfully test with.
-
 	    try {
 	      if ("webkitSpeechRecognition" in window) {
 	        //Chrome
@@ -122,9 +122,14 @@
 	      this.html.listenButton.textContent = "(Can't listen)";
 	      this.html.listenButton.className = "disabled button";
 	    }
+	    //--------------------------------
 	  }
 
 	  //----------------------------------------------------------------
+
+	  //onListenStart: update the HTML elements to indicate the current state.
+	  //Triggers on SpeechRecognition.start()
+
 
 	  _createClass(App, [{
 	    key: "onListenStart",
@@ -134,6 +139,11 @@
 	      this.html.listenButton.textContent = "Listening...";
 	      this.html.listenButton.className = "active button";
 	    }
+
+	    //onListenEnd: update the HTML elements to indicate the current state.
+	    //Triggers on SpeechRecognition.stop(), or when SpeechRecognition.onresult()
+	    //returns a result.
+
 	  }, {
 	    key: "onListenEnd",
 	    value: function onListenEnd(e) {
@@ -142,6 +152,12 @@
 	      this.html.listenButton.textContent = "Listen";
 	      this.html.listenButton.className = "button";
 	    }
+
+	    //onListenResults: process all recognised words.
+	    //Triggers when SpeechRecognition recognises a a series of words. (Usually
+	    //when it detects a pause, indicating the end of a sentence.) This will
+	    //trigger SpeechRecognition.onend() as well.
+
 	  }, {
 	    key: "onListenResults",
 	    value: function onListenResults(e) {
