@@ -1,7 +1,9 @@
 dark-colour = #333
+mid-colour = #999
 light-colour = #fff
 primary-colour = #c33
-highlight-colour = #f33
+primary-colour-faded = #600
+primary-colour-highlighted = #f33
 
 *
   box-sizing: border-box
@@ -24,7 +26,7 @@ a
   text-decoration: none
   
   &:hover
-    color: highlight-colour
+    color: primary-colour-highlighted
 
 table
   width: 100%
@@ -72,8 +74,23 @@ table
     justify-content: center
     
     .button
+      background: primary-colour
+      color: light-colour
+      cursor: pointer
       width: 20em
       margin: 1em
       
       &.disabled
-        background: #999
+        background: mid-colour
+      
+      &.active
+        animation-name: primary-pulse
+        animation-duration: 1s
+        animation-timing-function: linear
+        animation-iteration-count: infinite
+        animation-direction: alternate
+
+@keyframes primary-pulse {
+    from { background-color: primary-colour-highlighted }
+    to { background-color: light-colour }
+}

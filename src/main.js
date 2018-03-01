@@ -31,6 +31,7 @@ class App {
     this.onListenResults = this.onListenResults.bind(this);
     this.onListenError = this.onListenError.bind(this);
     this.listenButton_onClick = this.listenButton_onClick.bind(this);
+    this.speakButton_onClick = this.speakButton_onClick.bind(this);
     //--------------------------------
     
     //Speech Recognition
@@ -58,6 +59,7 @@ class App {
       this.speechRecognition.onerror = this.onListenError;
 
       this.html.listenButton.onclick = this.listenButton_onClick;
+      this.html.speakButton.onclick = this.speakButton_onClick;
     } else {
       this.html.listenButton.textContent = "(Can't listen)";
       this.html.listenButton.className = "disabled button";
@@ -70,17 +72,17 @@ class App {
     console.log("onListenStart: ", e);
     this.listenStatus = "listening";
     this.html.listenButton.textContent = "Listening...";
+    this.html.listenButton.className = "active button";
   }
   
   onListenEnd(e) {
     console.log("onListenEnd: ", e);
     this.listenStatus = "";
     this.html.listenButton.textContent = "Listen";
+    this.html.listenButton.className = "button";
   }
   
   onListenResults(e) {
-    console.log("onListenResults: ", e);
-    
     if (e && e.results) {
       let text = this.html.mainText.value.replace(/\s+$/g, '') + ' ';
       for (let i = 0; i < e.results.length; i++) {
@@ -88,8 +90,6 @@ class App {
           for (let j = 0; j < e.results.length; j++) {
             text += e.results[i][j].transcript + ' ';
           }
-        } else {
-          console.log(e.results[i]);
         }
       }
       this.html.mainText.value = text;
@@ -102,8 +102,7 @@ class App {
   
   //----------------------------------------------------------------
   
-  listenButton_onClick(e) {
-    console.log("CLICK", this.speechRecognition);
+  listenButton_onClick() {
     if (!this.speechRecognition) return;
     
     if (this.listenStatus === "listening") {
@@ -113,6 +112,8 @@ class App {
     }
   }
   
+  speakButton_onClick() {
+  }
 }
 //==============================================================================
 

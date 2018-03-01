@@ -68,9 +68,51 @@ table th {
   justify-content: center;
 }
 #app > main .control-panel .button {
+  background: #c33;
+  color: #fff;
+  cursor: pointer;
   width: 20em;
   margin: 1em;
 }
 #app > main .control-panel .button.disabled {
   background: #999;
+}
+#app > main .control-panel .button.active {
+  animation-name: primary-pulse;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+@-moz-keyframes primary-pulse {
+  from {
+    background-color: #f33;
+  }
+  to {
+    background-color: #fff;
+  }
+}
+@-webkit-keyframes primary-pulse {
+  from {
+    background-color: #f33;
+  }
+  to {
+    background-color: #fff;
+  }
+}
+@-o-keyframes primary-pulse {
+  from {
+    background-color: #f33;
+  }
+  to {
+    background-color: #fff;
+  }
+}
+@keyframes primary-pulse {
+  from {
+    background-color: #f33;
+  }
+  to {
+    background-color: #fff;
+  }
 }

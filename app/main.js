@@ -85,6 +85,7 @@
 	    this.onListenResults = this.onListenResults.bind(this);
 	    this.onListenError = this.onListenError.bind(this);
 	    this.listenButton_onClick = this.listenButton_onClick.bind(this);
+	    this.speakButton_onClick = this.speakButton_onClick.bind(this);
 	    //--------------------------------
 
 	    //Speech Recognition
@@ -116,6 +117,7 @@
 	      this.speechRecognition.onerror = this.onListenError;
 
 	      this.html.listenButton.onclick = this.listenButton_onClick;
+	      this.html.speakButton.onclick = this.speakButton_onClick;
 	    } else {
 	      this.html.listenButton.textContent = "(Can't listen)";
 	      this.html.listenButton.className = "disabled button";
@@ -130,6 +132,7 @@
 	      console.log("onListenStart: ", e);
 	      this.listenStatus = "listening";
 	      this.html.listenButton.textContent = "Listening...";
+	      this.html.listenButton.className = "active button";
 	    }
 	  }, {
 	    key: "onListenEnd",
@@ -137,12 +140,11 @@
 	      console.log("onListenEnd: ", e);
 	      this.listenStatus = "";
 	      this.html.listenButton.textContent = "Listen";
+	      this.html.listenButton.className = "button";
 	    }
 	  }, {
 	    key: "onListenResults",
 	    value: function onListenResults(e) {
-	      console.log("onListenResults: ", e);
-
 	      if (e && e.results) {
 	        var text = this.html.mainText.value.replace(/\s+$/g, '') + ' ';
 	        for (var i = 0; i < e.results.length; i++) {
@@ -150,8 +152,6 @@
 	            for (var j = 0; j < e.results.length; j++) {
 	              text += e.results[i][j].transcript + ' ';
 	            }
-	          } else {
-	            console.log(e.results[i]);
 	          }
 	        }
 	        this.html.mainText.value = text;
@@ -167,8 +167,7 @@
 
 	  }, {
 	    key: "listenButton_onClick",
-	    value: function listenButton_onClick(e) {
-	      console.log("CLICK", this.speechRecognition);
+	    value: function listenButton_onClick() {
 	      if (!this.speechRecognition) return;
 
 	      if (this.listenStatus === "listening") {
@@ -177,6 +176,9 @@
 	        this.speechRecognition.start();
 	      }
 	    }
+	  }, {
+	    key: "speakButton_onClick",
+	    value: function speakButton_onClick() {}
 	  }]);
 
 	  return App;
