@@ -9,7 +9,8 @@ This experimental web app:
 
 ## References
 
-- Dev Ref: [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)
+- MDN [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API) developer reference
+- [Google Web Speech API demo](https://www.google.com/intl/en/chrome/demos/speech.html)
 
 ## Development
 
